@@ -1,0 +1,4 @@
+# Undangan bersifat pribadi: jangan diindeks mesin pencari.
+# Untuk halaman DEMO di website utama Anda, hapus file ini dan baris X-Robots-Tag di _headers.
+User-agent: *
+Disallow: /

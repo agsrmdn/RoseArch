@@ -1,0 +1,723 @@
+<!doctype html>
+<!-- UBAH DI SINI (1/3): data-palet = pilihan warna: champagne (bawaan) | sage | mocha | biru.
+     Bisa juga diatur dari js/konfigurasi.js > tema.palet. data-slug dibiarkan kosong (slug diatur di konfigurasi.js). -->
+<html lang="id" data-slug="" data-palet="champagne">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#ebcdbf" />
+    <title>Undangan Pernikahan</title>
+
+    <!-- Tailwind CDN dipertahankan HANYA karena core.js membuat kartu buku tamu dengan kelas Tailwind.
+         Seluruh tampilan tema memakai css/style.css. Preflight dimatikan agar tidak menimpa CSS tema. -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = { corePlugins: { preflight: false } };
+    </script>
+
+    <!-- UBAH DI SINI (2/3): font. Satu keluarga saja agar ringan di HP.
+         Kalau mengganti font, ubah juga variabel --serif di css/style.css. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Cormorant+SC:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="preload" as="image" href="assets/relief-pintu.webp" />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  </head>
+  <body class="terkunci">
+    <!-- Ikon & ornamen kecil (warna mengikuti teks/palet) -->
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="0"
+      height="0"
+      style="position: absolute"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <defs>
+        <clipPath id="klip-arch" clipPathUnits="objectBoundingBox">
+          <path
+            d="M 0.0560 0.9364 L 0.0560 0.2449 C 0.0560 0.2046 0.0980 0.1878 0.1520 0.1777 C 0.2600 0.1576 0.3380 0.1274 0.3920 0.0904 C 0.4280 0.0636 0.4580 0.0334 0.5000 0.0334 C 0.5420 0.0334 0.5720 0.0636 0.6080 0.0904 C 0.6620 0.1274 0.7400 0.1576 0.8480 0.1777 C 0.9020 0.1878 0.9440 0.2046 0.9440 0.2449 L 0.9440 0.9364 Q 0.9440 0.9666 0.8900 0.9666 L 0.1100 0.9666 Q 0.0560 0.9666 0.0560 0.9364 Z"
+          />
+        </clipPath>
+        <clipPath id="klip-kartus-besar" clipPathUnits="objectBoundingBox">
+          <path
+            d="M 0.2866 0.0303 L 0.7134 0.0303 C 0.7587 0.0303 0.7781 0.0712 0.8233 0.0967 C 0.8686 0.1222 0.9268 0.1171 0.9656 0.1579 L 0.9656 0.8421 C 0.9268 0.8829 0.8686 0.8778 0.8233 0.9033 C 0.7781 0.9288 0.7587 0.9697 0.7134 0.9697 L 0.2866 0.9697 C 0.2413 0.9697 0.2219 0.9288 0.1767 0.9033 C 0.1314 0.8778 0.0732 0.8829 0.0344 0.8421 L 0.0344 0.1579 C 0.0732 0.1171 0.1314 0.1222 0.1767 0.0967 C 0.2219 0.0712 0.2413 0.0303 0.2866 0.0303 Z"
+          />
+        </clipPath>
+        <clipPath id="klip-kartus-kecil" clipPathUnits="objectBoundingBox">
+          <path
+            d="M 0.2090 0.0875 L 0.7910 0.0875 C 0.8395 0.0875 0.8686 0.2000 0.9171 0.2562 C 0.9559 0.3031 0.9753 0.3875 0.9656 0.5000 C 0.9753 0.6125 0.9559 0.6969 0.9171 0.7438 C 0.8686 0.8000 0.8395 0.9125 0.7910 0.9125 L 0.2090 0.9125 C 0.1605 0.9125 0.1314 0.8000 0.0829 0.7438 C 0.0441 0.6969 0.0247 0.6125 0.0344 0.5000 C 0.0247 0.3875 0.0441 0.3031 0.0829 0.2562 C 0.1314 0.2000 0.1605 0.0875 0.2090 0.0875 Z"
+          />
+        </clipPath>
+        <symbol id="s-pembatas" viewBox="0 0 160 16">
+          <g
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1"
+            stroke-linecap="round"
+          >
+            <path d="M2 8H62M98 8H158" />
+            <path d="M80 2l6 6-6 6-6-6z" />
+          </g>
+          <g fill="currentColor">
+            <circle cx="68" cy="8" r="1.5" />
+            <circle cx="92" cy="8" r="1.5" />
+            <circle cx="80" cy="8" r="1.4" />
+          </g>
+        </symbol>
+        <symbol id="i-bawah" viewBox="0 0 24 24">
+          <path
+            d="M6 9l6 6 6-6"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </symbol>
+        <symbol id="i-atas" viewBox="0 0 24 24">
+          <path
+            d="M6 15l6-6 6 6"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </symbol>
+        <symbol id="i-kiri" viewBox="0 0 24 24">
+          <path
+            d="M15 5l-7 7 7 7"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </symbol>
+        <symbol id="i-kanan" viewBox="0 0 24 24">
+          <path
+            d="M9 5l7 7-7 7"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </symbol>
+        <symbol id="i-pin" viewBox="0 0 24 24">
+          <g
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.4"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 0116 0z" />
+            <circle cx="12" cy="10" r="3" />
+          </g>
+        </symbol>
+        <symbol id="i-kalender" viewBox="0 0 24 24">
+          <g
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.4"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <rect x="3" y="5" width="18" height="16" rx="2" />
+            <path d="M3 10h18M8 3v4M16 3v4" />
+          </g>
+        </symbol>
+        <symbol id="i-salin" viewBox="0 0 24 24">
+          <g
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.4"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <rect x="9" y="9" width="12" height="12" rx="2" />
+            <path d="M5 15H4a1 1 0 01-1-1V4a1 1 0 011-1h10a1 1 0 011 1v1" />
+          </g>
+        </symbol>
+        <symbol id="i-play" viewBox="0 0 24 24">
+          <path d="M8 5.5v13l11-6.5z" fill="currentColor" />
+        </symbol>
+        <symbol id="i-jeda" viewBox="0 0 24 24">
+          <path d="M7 5h3v14H7zM14 5h3v14h-3z" fill="currentColor" />
+        </symbol>
+        <symbol id="i-ig" viewBox="0 0 24 24">
+          <g fill="none" stroke="currentColor" stroke-width="1.4">
+            <rect x="3" y="3" width="18" height="18" rx="5" />
+            <circle cx="12" cy="12" r="4" />
+            <circle cx="17.3" cy="6.7" r=".8" fill="currentColor" />
+          </g>
+        </symbol>
+        <symbol id="i-tutup" viewBox="0 0 24 24">
+          <path
+            d="M6 6l12 12M18 6L6 18"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+          />
+        </symbol>
+        <symbol id="i-hati" viewBox="0 0 24 24">
+          <path
+            d="M12 21s-8-5.2-8-11a4.6 4.6 0 018-3 4.6 4.6 0 018 3c0 5.8-8 11-8 11z"
+            fill="currentColor"
+          />
+        </symbol>
+        <symbol id="i-orang" viewBox="0 0 24 24">
+          <g fill="currentColor">
+            <circle cx="12" cy="8" r="4" />
+            <path d="M4 21c0-4.6 3.6-7.5 8-7.5s8 2.9 8 7.5z" />
+          </g>
+        </symbol>
+        <symbol id="i-menu" viewBox="0 0 24 24">
+          <path
+            d="M5 8h14M5 12h14M5 16h14"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+          />
+        </symbol>
+      </defs>
+    </svg>
+
+    <!-- ================= LATAR & RELIEF BUNGA (diam, tidak ikut transisi) =================
+         UBAH DI SINI (3/3): gambar relief ada di folder assets/ (relief-sudut.webp, relief-pintu.webp,
+         relief-segel.webp). Ganti dengan gambar sendiri bila ingin motif lain. -->
+    <div id="latar" aria-hidden="true"></div>
+    <img
+      class="sudut sudut-atas"
+      src="assets/relief-sudut.webp"
+      alt=""
+      aria-hidden="true"
+      decoding="async"
+    />
+    <img
+      class="sudut sudut-bawah"
+      src="assets/relief-sudut.webp"
+      alt=""
+      aria-hidden="true"
+      decoding="async"
+    />
+
+    <!-- ================= PANGGUNG =================
+         Bingkai lengkung (#arch) tetap diam. Hanya isi (.bab) yang berganti dengan efek blur-pudar.
+         Urutan bab = urutan di bawah ini. Bab dengan data-opsional / data-bagian bisa dimatikan
+         dari js/konfigurasi.js > tema.bagian. Judul bab (data-bab) dipakai di menu & label atas. -->
+    <header id="atas">
+      <button
+        type="button"
+        id="label-bab"
+        class="label-bab"
+        aria-haspopup="dialog"
+        aria-label="Buka daftar bagian"
+      >
+        <span id="nama-bab">Selamat Datang</span
+        ><span id="nomor-bab" class="nomor-bab">01 / 13</span>
+      </button>
+    </header>
+
+    <main id="panggung">
+      <div id="arch">
+        <svg
+          id="arch-garis"
+          viewBox="0 0 300 560"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        >
+          <path
+            class="garis-luar"
+            d="M2 540 L2 128 C2 104 16 94 34 88 C70 76 96 58 114 36 C126 20 136 2 150 2 C164 2 174 20 186 36 C204 58 230 76 266 88 C284 94 298 104 298 128 L298 540 Q298 558 280 558 L20 558 Q2 558 2 540Z"
+          />
+          <path
+            class="garis-dalam"
+            d="M 12.9 529.8 L 12.9 134.0 C 12.9 110.9 25.8 101.3 42.5 95.5 C 75.9 84.0 100.0 66.7 116.6 45.6 C 127.8 30.2 137.0 12.9 150.0 12.9 C 163.0 12.9 172.2 30.2 183.4 45.6 C 200.0 66.7 224.1 84.0 257.5 95.5 C 274.2 101.3 287.1 110.9 287.1 134.0 L 287.1 529.8 Q 287.1 547.1 270.5 547.1 L 29.5 547.1 Q 12.9 547.1 12.9 529.8 Z"
+          />
+        </svg>
+        <div id="isi">
+          <!-- 1. SELAMAT DATANG -->
+          <section class="bab" data-bab="Selamat Datang">
+            <div class="gulir tengah">
+              <p class="kecil-kapital">Undangan Pernikahan</p>
+              <h1 class="nama-pasangan">
+                <span data-isi="nama_wanita">Memuat</span>
+                <i class="dan">&amp;</i>
+                <span data-isi="nama_pria">Memuat</span>
+              </h1>
+              <svg class="pembatas" aria-hidden="true">
+                <use href="#s-pembatas" />
+              </svg>
+              <p class="teks">
+                Dengan penuh syukur, kami mengundang Anda untuk menjadi saksi
+                dan memberikan doa restu di hari bahagia kami.
+              </p>
+              <p class="tanggal-teks" data-isi="tanggal_panjang"></p>
+            </div>
+          </section>
+
+          <!-- 2. SALAM & AYAT -->
+          <section class="bab" data-bab="Salam &amp; Doa">
+            <div class="gulir tengah">
+              <p class="miring-besar">Bismillahirrahmanirrahim</p>
+              <h2 class="judul-kecil">
+                Assalamu’alaikum Warahmatullahi Wabarakatuh
+              </h2>
+              <svg class="pembatas" aria-hidden="true">
+                <use href="#s-pembatas" />
+              </svg>
+              <blockquote class="ayat">
+                <p id="ayat-teks">
+                  Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia
+                  menciptakan pasangan-pasangan untukmu.
+                </p>
+                <cite id="ayat-sumber">QS. Ar-Rum: 21</cite>
+              </blockquote>
+            </div>
+          </section>
+
+          <!-- 3. MEMPELAI -->
+          <section class="bab" data-bab="Mempelai">
+            <div class="gulir">
+              <h2 class="kartus"><span>Mempelai</span></h2>
+              <div class="pasangan">
+                <article class="mempelai">
+                  <div class="foto-arch" data-foto="wanita"></div>
+                  <h3 id="mempelai-wanita" class="nama-sedang">Memuat</h3>
+                  <p class="ortu" data-ortu="wanita"></p>
+                  <a class="ig" data-ig="wanita" target="_blank" rel="noopener"
+                    ><svg><use href="#i-ig" /></svg><span></span
+                  ></a>
+                </article>
+                <article class="mempelai">
+                  <div class="foto-arch" data-foto="pria"></div>
+                  <h3 id="mempelai-pria" class="nama-sedang">Memuat</h3>
+                  <p class="ortu" data-ortu="pria"></p>
+                  <a class="ig" data-ig="pria" target="_blank" rel="noopener"
+                    ><svg><use href="#i-ig" /></svg><span></span
+                  ></a>
+                </article>
+              </div>
+            </div>
+          </section>
+
+          <!-- 4. PERJALANAN KAMI (diisi dari konfigurasi.js > tema.cerita) -->
+          <section class="bab" data-bab="Perjalanan Kami" data-bagian="cerita">
+            <div class="gulir">
+              <h2 class="kartus"><span>Perjalanan Kami</span></h2>
+              <p class="teks tengah-teks">
+                Setiap langkah, sekecil apa pun, membawa kami sampai di hari
+                ini.
+              </p>
+              <ol id="cerita" class="perjalanan"></ol>
+            </div>
+          </section>
+
+          <!-- 5. HARI BAHAGIA: tanggal dipecah (hari, tanggal, bulan, tahun, jam) ke dalam bingkai berelief.
+               Nilai #acara-hari & #acara-tgl diisi core.js; bulan/tahun/jam diisi js/tema-konten.js. -->
+          <section class="bab" data-bab="Hari Bahagia">
+            <div class="gulir tengah">
+              <p class="kecil-kapital">Tanggal</p>
+              <div class="kartus-besar">
+                <span class="panel"></span>
+                <span id="tgl-bulan" class="tgl-bulan">Bulan</span>
+                <span id="acara-tgl" class="tgl-angka">00</span>
+                <i class="tgl-titik" aria-hidden="true"></i>
+                <span id="tgl-tahun" class="tgl-tahun">0000</span>
+                <span id="acara-bln" class="hidden">Bulan Tahun</span
+                ><!-- sumber dari core.js, dipecah jadi bulan & tahun -->
+              </div>
+              <div class="baris-kartus">
+                <div class="kartus-kecil">
+                  <span class="panel"></span
+                  ><span id="acara-hari" class="kecil-isi">Hari</span>
+                </div>
+                <div class="kartus-kecil">
+                  <span class="panel"></span
+                  ><span id="tgl-jam" class="kecil-isi">08.00 WIB</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- 5b. HITUNG MUNDUR: bab sendiri (id cd-* dibaca core.js). Kutipan: tema.kutipan di konfigurasi.js -->
+          <section class="bab" data-bab="Hitung Mundur">
+            <div class="gulir tengah">
+              <p class="kecil-kapital">Menuju hari bahagia</p>
+              <svg class="pembatas" aria-hidden="true">
+                <use href="#s-pembatas" />
+              </svg>
+              <div class="cd-besar" aria-label="Hitung mundur acara">
+                <i class="cd-bulat" aria-hidden="true"></i
+                ><span id="cd-hari" class="cd-hari-angka">00</span
+                ><i class="cd-bulat" aria-hidden="true"></i>
+              </div>
+              <p class="kecil-kapital cd-hari-label">Hari</p>
+              <div class="cd-kecil">
+                <div>
+                  <span id="cd-jam" class="cd-kecil-angka">00</span
+                  ><span class="cd-kecil-label">Jam</span>
+                </div>
+                <div>
+                  <span id="cd-menit" class="cd-kecil-angka">00</span
+                  ><span class="cd-kecil-label">Menit</span>
+                </div>
+                <div>
+                  <span id="cd-detik" class="cd-kecil-angka">00</span
+                  ><span class="cd-kecil-label">Detik</span>
+                </div>
+              </div>
+              <p id="cd-pesan" class="miring-sedang hidden">
+                Hari bahagia telah tiba.
+              </p>
+              <p id="kutipan" class="kutipan">
+                Dua jiwa, satu cinta, kini bersatu dalam janji suci.
+              </p>
+            </div>
+          </section>
+
+          <!-- 6. RANGKAIAN ACARA
+               .acara-item > .acara-nama + .acara-waktu dibuat dari tema.rundown dan ikut masuk ke catatan
+               Kalender tamu (dibaca core.js). -->
+          <section class="bab" data-bab="Rangkaian Acara">
+            <div class="gulir tengah">
+              <h2 class="kartus"><span>Rangkaian Acara</span></h2>
+              <div id="rundown" class="rundown"></div>
+              <p id="dresscode" class="miring-sedang hidden"></p>
+              <p class="kecil-kapital">Simpan ke kalender</p>
+              <div class="baris-tombol">
+                <a
+                  id="kal-google"
+                  href="#"
+                  target="_blank"
+                  rel="noopener"
+                  class="tombol"
+                  ><svg><use href="#i-kalender" /></svg>Google</a
+                >
+                <button id="kal-ics" type="button" class="tombol">
+                  <svg><use href="#i-kalender" /></svg>Apple / Outlook
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <!-- 7. LOKASI
+               #peta-wrap + #peta: core.js mengisi & menampilkan peta otomatis dari lokasi acara.
+               Pelat nama tempat: tema.lokasi.nama (opsional); alamat dari database. -->
+          <section class="bab" data-bab="Lokasi" data-bagian="lokasi">
+            <div class="gulir tengah">
+              <h2 class="kartus"><span>Lokasi</span></h2>
+              <div id="peta-wrap" class="jendela-peta hidden">
+                <iframe
+                  id="peta"
+                  title="Peta lokasi acara"
+                  loading="lazy"
+                  referrerpolicy="no-referrer-when-downgrade"
+                ></iframe>
+              </div>
+              <div class="pelat">
+                <p id="lokasi-nama" class="pelat-nama hidden"></p>
+                <p id="info-lokasi" class="pelat-alamat">Memuat lokasi...</p>
+              </div>
+              <a
+                data-href="maps"
+                href="#"
+                target="_blank"
+                rel="noopener"
+                class="tombol tombol-isi"
+                ><svg><use href="#i-pin" /></svg>Petunjuk Arah</a
+              >
+            </div>
+          </section>
+
+          <!-- 8. SIARAN LANGSUNG (opsional) -->
+          <section class="bab" data-bab="Siaran Langsung" data-bagian="live">
+            <div class="gulir tengah">
+              <h2 class="kartus">
+                <span id="live-judul">Siaran Langsung</span>
+              </h2>
+              <p class="teks" id="live-jadwal">
+                Bagi keluarga dan sahabat yang belum bisa hadir, doa Anda dari
+                jauh sangat berarti bagi kami.
+              </p>
+              <div id="live-kotak" class="live-kotak tanpa-geser"></div>
+              <a
+                id="live-link"
+                class="tombol tombol-isi"
+                href="#"
+                target="_blank"
+                rel="noopener"
+                ><svg><use href="#i-play" /></svg>Tonton Siaran</a
+              >
+            </div>
+          </section>
+
+          <!-- 9. GALERI (carousel; foto di konfigurasi.js > tema.galeri) -->
+          <section class="bab" data-bab="Galeri" data-bagian="galeri">
+            <div class="gulir tengah">
+              <h2 class="kartus"><span>Momen Kami</span></h2>
+              <div id="galeri" class="galeri"></div>
+              <p id="galeri-ket" class="kecil-kapital">
+                Geser &amp; ketuk foto
+              </p>
+            </div>
+          </section>
+
+          <!-- 10. HADIAH (opsional) -->
+          <section class="bab" data-bab="Hadiah" data-bagian="hadiah">
+            <div class="gulir">
+              <h2 class="kartus"><span>Hadiah Pernikahan</span></h2>
+              <p class="teks tengah-teks">
+                Kehadiran dan doa Anda adalah hadiah terbaik. Bila ingin berbagi
+                kebahagiaan, Anda dapat memberikannya melalui:
+              </p>
+              <div id="hadiah-daftar" class="hadiah-daftar"></div>
+            </div>
+          </section>
+
+          <!-- 11. RSVP -->
+          <section
+            class="bab"
+            data-bab="Konfirmasi Kehadiran"
+            data-bagian="rsvp"
+          >
+            <div class="gulir">
+              <h2 class="kartus"><span>Konfirmasi Kehadiran</span></h2>
+              <p class="teks tengah-teks">
+                Mohon konfirmasi kehadiran Anda agar kami dapat menyiapkan
+                segalanya dengan baik.
+              </p>
+              <form id="rsvp-form" class="rsvp">
+                <label class="label" for="input-nama">Nama</label>
+                <input
+                  type="text"
+                  id="input-nama"
+                  class="isian isian-nama"
+                  readonly
+                />
+
+                <p class="label" id="lbl-hadir">Apakah Anda akan hadir?</p>
+                <div
+                  class="opsi-daftar"
+                  role="radiogroup"
+                  aria-labelledby="lbl-hadir"
+                >
+                  <button
+                    type="button"
+                    class="opsi"
+                    role="radio"
+                    data-nilai="Hadir"
+                    aria-checked="true"
+                  >
+                    <i class="radio"></i>Insya Allah, saya hadir
+                  </button>
+                  <button
+                    type="button"
+                    class="opsi"
+                    role="radio"
+                    data-nilai="Tidak Hadir"
+                    aria-checked="false"
+                  >
+                    <i class="radio"></i>Mohon maaf, saya berhalangan
+                  </button>
+                </div>
+                <!-- Sumber nilai yang dibaca core.js; harus persis "Hadir" / "Tidak Hadir". -->
+                <select
+                  id="input-kehadiran"
+                  class="tersembunyi"
+                  tabindex="-1"
+                  aria-hidden="true"
+                >
+                  <option value="Hadir">Hadir</option>
+                  <option value="Tidak Hadir">Berhalangan</option>
+                </select>
+
+                <label class="label" for="input-ucapan">Ucapan &amp; doa</label>
+                <div class="chip-baris" aria-label="Contoh ucapan">
+                  <button
+                    type="button"
+                    class="chip-doa"
+                    data-teks="Selamat menempuh hidup baru. Semoga sakinah, mawaddah, warahmah."
+                  >
+                    Sakinah mawaddah
+                  </button>
+                  <button
+                    type="button"
+                    class="chip-doa"
+                    data-teks="Barakallahu lakuma wa baraka alaikuma wa jama'a bainakuma fi khair."
+                  >
+                    Barakallah
+                  </button>
+                  <button
+                    type="button"
+                    class="chip-doa"
+                    data-teks="Selamat ya! Bahagia selalu dan langgeng sampai maut memisahkan."
+                  >
+                    Selamat ya
+                  </button>
+                </div>
+                <textarea
+                  id="input-ucapan"
+                  class="isian"
+                  rows="3"
+                  maxlength="300"
+                  required
+                  placeholder="Tulis ucapan untuk mempelai..."
+                ></textarea>
+                <p class="hitung"><span id="hitung">0</span>/300</p>
+
+                <button
+                  type="submit"
+                  id="submit-btn"
+                  class="tombol tombol-isi tombol-penuh"
+                >
+                  Kirim
+                </button>
+                <p
+                  id="rsvp-status"
+                  class="u-status status"
+                  aria-live="polite"
+                ></p>
+              </form>
+            </div>
+          </section>
+
+          <!-- 12. UCAPAN TAMU (core.js mengisi #daftar-ucapan beserta tombol Balas) -->
+          <section class="bab" data-bab="Ucapan &amp; Doa" data-bagian="ucapan">
+            <div class="gulir">
+              <h2 class="kartus"><span>Ucapan &amp; Doa</span></h2>
+              <div id="daftar-ucapan" class="daftar-ucapan tanpa-geser">
+                <p class="kosong">Memuat ucapan...</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- 13. PENUTUP -->
+          <section class="bab" data-bab="Terima Kasih" data-penutup>
+            <div class="gulir tengah">
+              <p class="miring-besar">Terima kasih</p>
+              <svg class="pembatas" aria-hidden="true">
+                <use href="#s-pembatas" />
+              </svg>
+              <p class="teks">
+                Merupakan kehormatan dan kebahagiaan bagi kami apabila
+                Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu.
+              </p>
+              <p class="judul-kecil">
+                Wassalamu’alaikum Warahmatullahi Wabarakatuh
+              </p>
+              <p class="kecil-kapital">Kami yang berbahagia</p>
+              <p id="penutup-nama" class="nama-penutup">Nama &amp; Nama</p>
+              <!-- FOOTER: diisi js/tema-konten.js dari konfigurasi.js > tema.kredit (tampil:false = dihapus) -->
+              <footer id="kredit" class="kredit"></footer>
+            </div>
+          </section>
+        </div>
+      </div>
+    </main>
+
+    <button
+      type="button"
+      id="balik"
+      class="pil-balik tak-ada"
+      aria-label="Kembali ke bagian sebelumnya"
+    >
+      <svg><use href="#i-kiri" /></svg>
+    </button>
+    <button
+      type="button"
+      id="lanjut"
+      class="pil"
+      aria-label="Lanjut ke bagian berikutnya"
+    >
+      <span id="lanjut-teks">Gulir ke bawah</span
+      ><svg id="lanjut-ikon"><use href="#i-bawah" /></svg>
+    </button>
+
+    <button
+      id="tombol-musik"
+      type="button"
+      class="musik hidden"
+      aria-label="Putar atau jeda musik"
+      aria-pressed="false"
+      data-main="false"
+    >
+      <span class="musik-info" role="status" aria-live="polite"
+        >Musik menyala</span
+      >
+      <span class="musik-cakram"
+        ><span class="bunga-musik" aria-hidden="true"></span
+      ></span>
+    </button>
+
+    <!-- Menu daftar bagian: diisi otomatis oleh JS -->
+    <div
+      id="menu"
+      class="menu hidden"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Daftar bagian"
+    >
+      <button type="button" class="menu-tutup ikon-tombol" aria-label="Tutup">
+        <svg><use href="#i-tutup" /></svg>
+      </button>
+      <nav id="menu-daftar" class="menu-daftar"></nav>
+    </div>
+
+    <!-- ================= PINTU PEMBUKA =================
+         Dua daun pintu berelief + segel oval. Ketuk mana saja untuk membuka. -->
+    <div id="pintu" role="dialog" aria-label="Sampul undangan">
+      <div id="gelap-dalam"></div>
+      <div class="adegan">
+        <!-- Daun kanan di bawah, daun kiri (dengan segel) di atas -->
+        <div class="daun daun-kanan">
+          <div class="muka"></div>
+          <div class="redup"></div>
+          <i class="sisi"></i>
+        </div>
+        <div class="daun daun-kiri">
+          <div class="muka"></div>
+          <div class="redup"></div>
+          <i class="sisi"></i>
+          <button
+            type="button"
+            class="segel"
+            id="segel"
+            aria-label="Buka undangan"
+          >
+            <span class="segel-relief"></span>
+          </button>
+        </div>
+      </div>
+      <div class="sambutan">
+        <div class="pelat-tamu">
+          <span class="panel"></span>
+          <p class="kecil-kapital">Kepada Yth.</p>
+          <p id="nama-tamu" class="nama-tamu">Tamu Undangan</p>
+          <i class="garis-halus" aria-hidden="true"></i>
+          <p class="ketuk">Ketuk segel untuk membuka</p>
+        </div>
+      </div>
+    </div>
+
+    <audio id="musik" src="clients/demo/musik.mp3" loop preload="none"></audio>
+
+    <!-- NOTE: urutan wajib  konfigurasi > core > tema-konten > tema-minimalist -->
+    <script src="js/konfigurasi.js"></script>
+    <script src="js/core.js"></script>
+    <script src="js/tema-konten.js"></script>
+    <script src="js/tema-minimalist.js"></script>
+  </body>
+</html>

@@ -1,0 +1,5 @@
+# Header keamanan untuk Cloudflare Pages. Taruh file ini (tanpa ekstensi) sejajar dengan index.html.
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Robots-Tag: noindex, nofollow

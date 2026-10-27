@@ -1,0 +1,20 @@
+ISI FOLDER ASSETS
+
+Sudah termasuk (ornamen relief 3D buatan sendiri, jangan dihapus):
+  relief-pintu.webp      motif bunga timbul di dua daun pintu pembuka
+  relief-segel.webp      segel oval di tengah pintu
+  relief-sudut.webp      bunga timbul di pojok kiri-atas & kanan-bawah halaman
+  relief-bingkai.webp    molding bingkai lengkung
+  tekstur-plester.webp   serat plester halus (latar & pintu)
+  relief-kartus-besar.webp / relief-kartus-kecil.webp   bingkai tanggal, hari, jam
+  relief-pelat-tamu.webp pelat nama tamu di sampul
+  relief-bunga-musik.webp bunga mekar untuk tombol musik (berputar saat musik menyala)
+  Semua transparan, jadi otomatis ikut warna palet. Bisa dibuat ulang dengan alat/buat-relief.py.
+
+Perlu Anda tambahkan per klien:
+  musik.mp3              lagu latar (mulai otomatis saat pintu dibuka). Tanpa file ini kontrol musik disembunyikan.
+  mempelai-wanita.jpg    foto portrait 3:4 (mis. 900x1200)       -> js/konfigurasi.js > tema.foto.wanita
+  mempelai-pria.jpg      foto portrait 3:4                        -> js/konfigurasi.js > tema.foto.pria
+  galeri-1.jpg ...       foto galeri portrait 3:4, 5 sampai 12    -> js/konfigurasi.js > tema.galeri
+  perjalanan-1.jpg ...   foto 4:3 untuk tiap langkah (opsional)   -> js/konfigurasi.js > tema.cerita[].foto
+Saran: kompres foto ke lebar maksimal 1200px, kualitas 80%, agar cepat dibuka di HP.
